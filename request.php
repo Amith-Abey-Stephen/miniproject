@@ -39,8 +39,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 if ($stmt) {
                     $stmt->bind_param("issssssss", $shop_id, $shop_name, $shop_address, $name, $email, $phone, $current_location, $service_needed, $status);
                     if ($stmt->execute()) {
+                        
                         $message = "Service request submitted successfully.";
-                        header("Location: location.php");
+                        echo "<script type='text/javascript'>alert('$message'); window.location.href = 'location.php';</script>";
 
                     } else {
                         $message = "Error submitting service request.";
