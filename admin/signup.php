@@ -8,6 +8,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Hash the password
 
+    if (!preg_match('/^\d{10}$/', $phone)) {
+        $_SESSION['error'] = "Phone number must be exactly 10 digits.";
+    }
+
     // Prepare SQL query based on user type
     if ($userType == 'admin') {
         $query = "INSERT INTO admins (name, email, password) VALUES (?, ?, ?)";

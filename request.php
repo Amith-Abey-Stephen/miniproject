@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php if ($message): ?>
         <p><?php echo $message; ?></p>
     <?php endif; ?>
-    <form action="request.php" method="post">
+    <form action="request.php" method="post" onsubmit="return validateForm()">
         <input type="hidden" name="shop_name" value="<?php echo $shop_name; ?>">
         <input type="hidden" name="shop_address" value="<?php echo $shop_address; ?>">
         <label for="name">Name:</label>
@@ -92,5 +92,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         
         <input type="submit" value="Submit Request">
     </form>
+    <script>
+        function validateForm() {
+            var phone = document.getElementById("phone").value;
+            if (phone.length !== 10 || isNaN(phone)) {
+                alert("Phone number must be 10 digits.");
+                return false;
+            }
+            return true;
+        }
+    </script>
 </body>
 </html>
