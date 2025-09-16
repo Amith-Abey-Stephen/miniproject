@@ -23,33 +23,34 @@ session_start();
         var lat = position.coords.latitude;
         var lon = position.coords.longitude;
         console.log("Position obtained: ", lat, lon);
-        fetchLocationFromServer(lat, lon);
+        // Display coordinates first
+        document.getElementById("locationDisplay").value = lat + ", " + lon;
+        // Now fetch location name using Nominatim
+        fetch(`https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`, {
+            method: 'GET',
+            headers: {
+                'User-Agent': 'YourAppName/1.0 (your@email.com)',
+                'Accept': 'application/json'
+            }
+        })
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok');
+            return response.json();
+        })
+        .then(data => {
+            if (data && data.display_name) {
+                document.getElementById("locationDisplay").value = data.display_name;
+            } else {
+                document.getElementById("locationDisplay").value += " (Location name not found)";
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching location name:', error);
+            document.getElementById("locationDisplay").value += " (Error fetching location name)";
+        });
     }
 
-    function fetchLocationFromServer(lat, lon) {
-        var xhr = new XMLHttpRequest();
-        var url = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lon}`;
-        
-        xhr.open("GET", url, true);
-        xhr.onreadystatechange = function () {
-            if (xhr.readyState == 4 && xhr.status == 200) {
-                try {
-                    var response = JSON.parse(xhr.responseText);
-                    console.log("Nominatim response: ", response);
-                    if (response.address) {
-                        var address = response.address.village || response.address.town || response.address.city || response.address.state_district || response.address.state;
-                        var district = response.address.state_district || response.address.state;
-                        document.getElementById("locationDisplay").value = `${address}, ${district}`;
-                    } else {
-                        showError({message: "Unable to retrieve location details."});
-                    }
-                } catch (e) {
-                    showError({message: "Error parsing location data."});
-                }
-            }
-        };
-        xhr.send();
-    }
+    // fetchLocationFromServer removed: now we display coordinates directly
 
     function fetchShops() {
         var location = document.getElementById("locationDisplay").value;

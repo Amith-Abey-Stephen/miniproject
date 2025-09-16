@@ -1,4 +1,4 @@
--- phpMyAdmin SQL Dump
+;-- phpMyAdmin SQL Dump
 -- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
@@ -18,17 +18,24 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `shop_management`
---
 
--- --------------------------------------------------------
 
---
--- Table structure for table `services`
---
-
-CREATE TABLE `services` (
+CREATE TABLE `admins` (
   `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- Table structure for table `services`
+-- Indexes for table `admins`
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+--
+-- AUTO_INCREMENT for table `admins`
+ALTER TABLE `admins`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
   `shop_id` int(11) NOT NULL,
   `service_name` varchar(255) NOT NULL,
   `description` text DEFAULT NULL,

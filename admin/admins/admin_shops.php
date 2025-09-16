@@ -4,14 +4,22 @@ session_start();
 // Include database connection
 include '../db_connection.php';
 
+
 // Handle form submission for adding a new shop
 if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['add_shop'])) {
     $name = $_POST['name'];
-    $location = $_POST['location'];
+    $address = $_POST['address'];
+    $district = $_POST['district'];
+    $latitude = $_POST['latitude'];
+    $longitude = $_POST['longitude'];
+    $phone_number = $_POST['phone_number'];
+    $email = $_POST['email'];
+    $website = $_POST['website'];
+    $owner_email = $_POST['owner_email'];
 
     // Insert new shop into the database
-    $stmt = $conn->prepare("INSERT INTO shops (shop_name, address) VALUES (?, ?)");
-    $stmt->bind_param("ss", $name, $location);
+    $stmt = $conn->prepare("INSERT INTO shops (shop_name, address, district, latitude, longitude, phone_number, email, website, owner_email) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssddssss", $name, $address, $district, $latitude, $longitude, $phone_number, $email, $website, $owner_email);
 
     if ($stmt->execute()) {
         // Redirect to the shops page after successful insertion
@@ -114,31 +122,53 @@ $shops_result = $conn->query("SELECT * FROM shops");
             flex-grow: 1;
         }
         .card {
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: 20px auto;
             padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        .card h2 {
+            text-align: center;
             margin-bottom: 20px;
         }
-        .card h2 {
-            margin-top: 0;
+
+        .card form {
+            display: flex;
+            flex-direction: column;
         }
-        .card p {
-            margin: 10px 0;
+
+        .card label {
+            margin-bottom: 5px;
+            font-weight: bold;
         }
-        .card table {
+
+        .card input[type="text"],
+        .card input[type="email"],
+        .card textarea {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
             width: 100%;
-            border-collapse: collapse;
+            box-sizing: border-box;
         }
-        .card table, .card th, .card td {
-            border: 1px solid #ddd;
+
+        .card input[type="submit"] {
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #28a745;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
         }
-        .card th, .card td {
-            padding: 8px;
-            text-align: left;
-        }
-        .card th {
-            background-color: #f2f2f2;
+
+        .card input[type="submit"]:hover {
+            background-color: #218838;
         }
     </style>
 </head>
@@ -182,15 +212,38 @@ $shops_result = $conn->query("SELECT * FROM shops");
         </div>
 
         <div class="card">
-            <h2>Add New Shop</h2>
-            <form action="admin_shops.php" method="POST">
-                <label for="name">Shop Name:</label>
-                <input type="text" id="name" name="name" required>
-                <label for="location">Location:</label>
-                <input type="text" id="location" name="location" required>
-                <input type="submit" name="add_shop" value="Add Shop">
-            </form>
-        </div>
+    <h2>Add New Shop</h2>
+    <form action="admin_shops.php" method="POST">
+        <label for="name">Shop Name:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="address">Address:</label>
+        <textarea id="address" name="address" required></textarea>
+        
+        <label for="district">District:</label>
+        <input type="text" id="district" name="district" required>
+        
+        <label for="latitude">Latitude:</label>
+        <input type="text" id="latitude" name="latitude" required>
+        
+        <label for="longitude">Longitude:</label>
+        <input type="text" id="longitude" name="longitude" required>
+        
+        <label for="phone_number">Phone Number:</label>
+        <input type="text" id="phone_number" name="phone_number" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="website">Website:</label>
+        <input type="text" id="website" name="website">
+        
+        <label for="owner_email">Owner Email:</label>
+        <input type="email" id="owner_email" name="owner_email" required>
+        
+        <input type="submit" name="add_shop" value="Add Shop">
+    </form>
+</div>
 
         <?php if (isset($_GET['edit'])): ?>
         <?php

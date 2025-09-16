@@ -33,18 +33,46 @@ session_start();
     
    
     <div class="container" id="home">
-        <h1>Service at your
-        <br> finger tip.</h1>
-        <p> 
+        <h1>Service at your<br> finger tip.</h1>
+        <p>
             Lorem ipsum dolor sit amet, consectetur<br>
             adipiscing elit, sed do eiusmod tempor<br>
             incididunt ut labore et dolore
         </p>
-        
-        <form >
-            <a href="location.php"><input type="button"  value="Find Now" name="Find Now" id="findnow" ></a>
+        <form>
+            <a href="location.php"><input type="button" value="Find Now" name="Find Now" id="findnow"></a>
         </form>
+        <div id="location-info" style="margin-top:20px;"></div>
+        <button onclick="getLocation()" style="margin-top:10px;">Get My Current Location</button>
     </div>
+    <script>
+    function getLocation() {
+        var locationInfo = document.getElementById('location-info');
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var lat = position.coords.latitude;
+                var lon = position.coords.longitude;
+                locationInfo.innerHTML = "Latitude: " + lat + "<br>Longitude: " + lon;
+                // Example: send to backend
+                /*
+                fetch('fetch_location.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'lat=' + lat + '&lon=' + lon
+                })
+                .then(response => response.text())
+                .then(data => {
+                    // handle response from PHP
+                });
+                */
+            }, function(error) {
+                locationInfo.innerHTML = "Error getting location: " + error.message;
+            });
+        } else {
+            locationInfo.innerHTML = "Geolocation is not supported by this browser.";
+        }
+    }
+    </script>
 
 
     <section class="about" id="about">
